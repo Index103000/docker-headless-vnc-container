@@ -63,6 +63,15 @@ source $HOME/.chromium-browser.init
 ## resolve_vnc_connection
 VNC_IP=$(hostname -i)
 
+## start ssh
+echo -e "\n------------------ start ssh  ----------------------------"
+# 设置 root 用户的密码，替换为你的密码
+echo 'root:123456' | chpasswd
+# Start SSH daemon directly without systemd
+/usr/sbin/sshd -D &
+# 显示成功消息
+echo "SSH 服务已启动，root密码已设置为: 123456"
+
 ## change vnc password
 echo -e "\n------------------ change VNC password  ------------------"
 # first entry is control, second is view (if only one is valid for both)
@@ -85,8 +94,8 @@ chmod 600 $PASSWD_PATH
 
 ## start vncserver and noVNC webclient
 echo -e "\n------------------ start noVNC  ----------------------------"
-if [[ $DEBUG == true ]]; then echo "$NO_VNC_HOME/utils/novnc_proxy --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT"; fi
-$NO_VNC_HOME/utils/novnc_proxy --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT > $STARTUPDIR/no_vnc_startup.log 2>&1 &
+if [[ $DEBUG == true ]]; then echo "$NO_VNC_HOME/utils/novnc_proxy --vnc 0.0.0.0:$VNC_PORT --listen $NO_VNC_PORT"; fi
+$NO_VNC_HOME/utils/novnc_proxy --vnc 0.0.0.0:$VNC_PORT --listen $NO_VNC_PORT > $STARTUPDIR/no_vnc_startup.log 2>&1 &
 PID_SUB=$!
 
 #echo -e "\n------------------ start VNC server ------------------------"

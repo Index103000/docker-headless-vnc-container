@@ -60,6 +60,9 @@ RUN $INST_SCRIPTS/libnss_wrapper.sh
 ADD ./src/common/scripts $STARTUPDIR
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
 
+### Install ssh
+RUN $INST_SCRIPTS/install_ssh.sh
+
 USER 1000
 
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
