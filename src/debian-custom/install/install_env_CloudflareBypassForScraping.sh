@@ -30,11 +30,23 @@ apt-get update && \
         xdg-utils \
         xvfb
 
-# Upgrade pip and install dependencies inside the virtual environment
-# Install Python dependencies including pyvirtualdisplay
-# 安装系统级 Python 包，可以加上 --break-system-packages 参数来强制安装
-pip3 install --upgrade pip
-pip3 install --break-system-packages pyvirtualdisplay
 
-# Clean up
+# Create a Python virtual environment
+python3 -m venv /opt/venv
+
+# Activate the virtual environment
+source /opt/venv/bin/activate
+
+
+# Upgrade pip and install dependencies inside the virtual environment
+pip3 install --upgrade pip
+
+# 以后在该环境中运行 Python 代码时，记得通过 source /opt/venv/bin/activate 激活虚拟环境
+# Install Python dependencies inside the virtual environment
+pip3 install pyvirtualdisplay
+
+# Clean up apt cache to reduce image size
 apt-get clean -y
+
+# Deactivate the virtual environment (optional, can be done when you exit the script)
+deactivate
