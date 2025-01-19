@@ -63,10 +63,6 @@ source $HOME/.chromium-browser.init
 ## resolve_vnc_connection
 VNC_IP=$(hostname -i)
 
-## 安装 CloudflareBypassForScraping 所需环境
-$STARTUPDIR/CloudflareBypassForScraping-init.sh
-
-
 ## start ssh
 echo -e "\n------------------ start ssh  ----------------------------"
 # 设置 root 用户的密码，替换为你的密码
