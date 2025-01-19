@@ -2,13 +2,10 @@
 ### every exit != 0 fails the script
 set -e
 
-# Set environment variables to avoid interactive prompts during build
-export DEBIAN_FRONTEND=noninteractive
-export DOCKERMODE=true
-
-# Install necessary packages for Xvfb and pyvirtualdisplay
-apt-get update && \
-    apt-get install -y \
+# Install necessary packages for Xvfb
+# Temporarily override DEBIAN_FRONTEND only for this installation step，to avoid interactive prompts during build
+DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
         wget \
         gnupg \
         ca-certificates \
@@ -32,15 +29,3 @@ apt-get update && \
 
 # Clean up apt cache to reduce image size
 apt-get clean -y
-
-# Create a Python virtual environment
-python3 -m venv /opt/CloudflareBypassForScraping/venv
-# Activate the virtual environment
-source /opt/CloudflareBypassForScraping/venv/bin/activate
-# Upgrade pip and install dependencies inside the virtual environment
-pip3 install --upgrade pip
-# 以后在该环境中运行 Python 代码时，记得通过 source /opt/venv/bin/activate 激活虚拟环境
-# Install Python dependencies inside the virtual environment
-pip3 install pyvirtualdisplay
-# Deactivate the virtual environment (optional, can be done when you exit the script)
-deactivate

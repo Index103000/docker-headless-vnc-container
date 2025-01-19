@@ -69,7 +69,8 @@ RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
 ### Install ssh
 RUN $INST_SCRIPTS/install_ssh.sh
 
-USER 1000
+# Switch to root user to install additional software
+USER 0
 
 ENTRYPOINT ["/dockerstartup/vnc_startup_custom.sh"]
 CMD ["--wait"]

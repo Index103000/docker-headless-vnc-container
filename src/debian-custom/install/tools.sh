@@ -11,7 +11,8 @@ apt-get install -y \
         locales \
         bzip2 \
         procps \
-        apt-utils
+        apt-utils \
+        sudo
 
 apt-get clean -y
 
