@@ -32,8 +32,9 @@ apt-get update && \
 
 # Upgrade pip and install dependencies inside the virtual environment
 # Install Python dependencies including pyvirtualdisplay
+# 安装系统级 Python 包，可以加上 --break-system-packages 参数来强制安装
 pip3 install --upgrade pip
-pip3 install pyvirtualdisplay
+pip3 install --break-system-packages pyvirtualdisplay
 
 # Clean up
 apt-get clean -y
