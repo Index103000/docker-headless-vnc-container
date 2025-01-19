@@ -71,5 +71,5 @@ RUN $INST_SCRIPTS/install_ssh.sh
 
 USER 1000
 
-ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
+ENTRYPOINT ["/dockerstartup/vnc_startup_custom.sh"]
 CMD ["--wait"]
