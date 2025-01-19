@@ -4,7 +4,14 @@ set -e
 
 echo "Install some common tools for further installation"
 apt-get update
-apt-get install -y vim wget net-tools locales bzip2 procps apt-utils
+apt-get install -y \
+        vim \
+        wget \
+        net-tools \
+        locales \
+        bzip2 \
+        procps \
+        apt-utils
 
 apt-get clean -y
 

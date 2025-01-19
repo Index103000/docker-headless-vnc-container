@@ -34,17 +34,20 @@ WORKDIR $HOME
 
 ### Add all install scripts for further steps
 ADD ./src/common/install/ $INST_SCRIPTS/
-ADD ./src/debian/install/ $INST_SCRIPTS/
+ADD ./src/debian-custom/install/ $INST_SCRIPTS/
 
 ### Install some common tools
 RUN $INST_SCRIPTS/tools.sh
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
-### Install python3 && venv
-#RUN $INST_SCRIPTS/install_python3_venv.sh
-
 ### Install custom fonts
 RUN $INST_SCRIPTS/install_custom_fonts.sh
+
+### Install python3 && venv
+RUN $INST_SCRIPTS/install_python3_venv.sh
+
+### Install Env For CloudflareBypassForScraping
+RUN $INST_SCRIPTS/install_env_CloudflareBypassForScraping.sh
 
 ### Install xvnc-server & noVNC - HTML5 based VNC viewer
 RUN $INST_SCRIPTS/tigervnc.sh
