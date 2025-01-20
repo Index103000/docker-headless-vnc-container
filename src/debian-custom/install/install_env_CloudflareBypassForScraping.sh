@@ -28,7 +28,9 @@ DEBIAN_FRONTEND=noninteractive apt-get update && \
         libdrm2 \
         xdg-utils \
         xvfb \
-        xserver-xephyr
+        xserver-xephyr \
+        python3-tk \
+        python3-dev
 
 # Clean up apt cache to reduce image size
 apt-get clean -y

@@ -123,6 +123,15 @@ echo -e "\nVNCSERVER started on DISPLAY= $DISPLAY \n\t=> connect via VNC viewer 
 echo -e "\nnoVNC HTML client started:\n\t=> connect via http://$VNC_IP:$NO_VNC_PORT/?password=...\n"
 
 
+# 在这里插入自定义命令，确保在等待之前执行
+if [[ -n "$2" ]]; then
+    echo -e "\n------------------ EXECUTE ADDITIONAL COMMAND ------------------"
+    echo "Executing command: '${@:2}'"
+    # 执行传入的命令
+    bash -c "${@:2}"
+fi
+
+
 if [[ $DEBUG == true ]] || [[ $1 =~ -t|--tail-log ]]; then
     echo -e "\n------------------ $HOME/.vnc/*$DISPLAY.log ------------------"
     # if option `-t` or `--tail-log` block the execution and tail the VNC log
