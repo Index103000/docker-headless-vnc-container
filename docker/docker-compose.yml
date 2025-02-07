@@ -1,0 +1,32 @@
+services:
+  debian-xfce-vnc-custom:
+    image: "index103000/debian-xfce-vnc-custom:v1.0.0"
+#    build:
+#      context: "./docker-headless-vnc-container"
+#      dockerfile: "Dockerfile.debian-xfce-vnc-custom"
+    container_name: debian-xfce-vnc-custom
+#    restart: unless-stopped
+    ports:
+      # VNC
+      - "5901:5901"
+      # noVNC
+      - "6901:6901"
+      # ssh
+      - "2222:22"
+    environment:
+      # VNC 分辨率
+      - VNC_RESOLUTION=1920x1080
+      # VNC 密码
+      - VNC_PW=123456
+    user: "0"  # 运行容器时使用 root 用户
+#    volumes:
+#      # 映射 本地项目目录 到 容器项目目录
+#      - ./project:/project
+#    entrypoint: [ "/dockerstartup/vnc_startup_custom.sh" ]
+#    command: [ "--wait", "venv/bin/python3 server_web_unblocker.py" ]
+    # 日志配置，限制单个日志文件大小10MB，保留3个历史文件
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "10m"
+#        max-file: "3"

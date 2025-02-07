@@ -12,7 +12,9 @@ apt-get install -y \
         bzip2 \
         procps \
         apt-utils \
-        sudo
+        sudo \
+        curl \
+        iputils-ping
 
 apt-get clean -y
 

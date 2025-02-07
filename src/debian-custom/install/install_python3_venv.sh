@@ -3,6 +3,7 @@
 set -e
 
 # Install Python and venv
+# python3-numpy used for websockify/novnc
 echo "Install Python 3 and venv"
 apt-get update && \
     apt-get install -y \
