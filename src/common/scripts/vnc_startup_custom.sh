@@ -114,10 +114,8 @@ fi
 if [[ $DEBUG == true ]]; then echo "$vnc_cmd"; fi
 $vnc_cmd > $STARTUPDIR/no_vnc_startup.log 2>&1
 
-echo -e "start window manager123\n..."
+echo -e "start window manager\n..."
 $HOME/wm_startup.sh &> $STARTUPDIR/wm_startup.log
-
-echo -e "456464"
 
 ## log connect options
 echo -e "\n\n------------------ VNC environment started ------------------"

@@ -1,9 +1,12 @@
 services:
+  # 注意：当前在 linux 上构建就很顺利，在 windows 上构建会因为 换行符 等问题，导致最终不能运行
+  # 不使用缓存构建（有时候带缓存会出现一些乱七八糟的问题）：docker compose build --no-cache
+  # 启动服务 docker compose up -d debian-xfce-vnc-custom
   debian-xfce-vnc-custom:
     image: "index103000/debian-xfce-vnc-custom:v1.0.0"
-#    build:
-#      context: "./docker-headless-vnc-container"
-#      dockerfile: "Dockerfile.debian-xfce-vnc-custom"
+    build:
+      context: ".."
+      dockerfile: "Dockerfile.debian-xfce-vnc-custom"
     container_name: debian-xfce-vnc-custom
 #    restart: unless-stopped
     ports:
