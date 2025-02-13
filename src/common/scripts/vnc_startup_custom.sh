@@ -9,10 +9,7 @@ USAGE:
 docker run -it -p 6901:6901 -p 5901:5901 consol/<image>:<tag> <option>
 
 IMAGES:
-consol/debian-xfce-vnc
-consol/rocky-xfce-vnc
-consol/debian-icewm-vnc
-consol/rocky-icewm-vnc
+consol/debian-xfce-vnc-custom
 
 TAGS:
 latest  stable version of branch 'master'
@@ -65,32 +62,39 @@ VNC_IP=$(hostname -i)
 
 ## start ssh
 echo -e "\n------------------ start ssh  ----------------------------"
-# 设置 root 用户的密码，替换为你的密码
-echo 'root:123456' | chpasswd
+# 检查环境变量是否已经设置密码，未设置则生成一个随机密码
+if [ -z "$ROOT_PASSWORD" ]; then
+    # 生成一个随机的16位密码
+    ROOT_PASSWORD=$(openssl rand -base64 16)
+fi
+# 设置 root 用户的密码
+echo "root:$ROOT_PASSWORD" | chpasswd
 # Start SSH daemon directly without systemd
 /usr/sbin/sshd -D &
 # 显示成功消息
-echo "SSH 服务已启动，root密码已设置为: 123456"
+echo "SSH 服务已启动，root密码已设置为: $ROOT_PASSWORD"
+
 
 ## change vnc password
 echo -e "\n------------------ change VNC password  ------------------"
 # first entry is control, second is view (if only one is valid for both)
 mkdir -p "$HOME/.vnc"
 PASSWD_PATH="$HOME/.vnc/passwd"
-
+# 清除现有密码文件
 if [[ -f $PASSWD_PATH ]]; then
     echo -e "\n---------  purging existing VNC password settings  ---------"
     rm -f $PASSWD_PATH
 fi
-
-if [[ $VNC_VIEW_ONLY == "true" ]]; then
-    echo "start VNC server in VIEW ONLY mode!"
-    #create random pw to prevent access
-    echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > $PASSWD_PATH
+# 如果环境变量 VNC_PW 设置了密码，则使用该密码
+if [ -z "$VNC_PW" ]; then
+    # 如果没有设置密码，则生成一个随机密码
+    VNC_PW=$(openssl rand -base64 16)
+    echo "VNC password is not set. Generated a random password"
 fi
-echo "$VNC_PW" | vncpasswd -f >> $PASSWD_PATH
+# 设置 VNC 密码
+echo "$VNC_PW" | vncpasswd -f > $PASSWD_PATH
 chmod 600 $PASSWD_PATH
-
+echo "VNC password is set to: $VNC_PW"
 
 ## start vncserver and noVNC webclient
 echo -e "\n------------------ start noVNC  ----------------------------"
@@ -105,10 +109,18 @@ vncserver -kill $DISPLAY &> $STARTUPDIR/vnc_startup.log \
     || echo "no locks present"
 
 echo -e "start vncserver with param: VNC_COL_DEPTH=$VNC_COL_DEPTH, VNC_RESOLUTION=$VNC_RESOLUTION\n..."
-
+# 配置 vnc启动命令
 vnc_cmd="vncserver $DISPLAY -depth $VNC_COL_DEPTH -geometry $VNC_RESOLUTION PasswordFile=$HOME/.vnc/passwd"
+# 配置无密码
 if [[ ${VNC_PASSWORDLESS:-} == "true" ]]; then
   vnc_cmd="${vnc_cmd} -SecurityTypes None --I-KNOW-THIS-IS-INSECURE"
+fi
+# 环境变量 VNC_VIEW_ONLY 为 true，则配置以 VIEW ONLY 模式启动
+if [[ $VNC_VIEW_ONLY == "true" ]]; then
+    vnc_cmd="$vnc_cmd -viewonly"
+    echo "VNC server started in VIEW ONLY mode!"
+else
+    echo "VNC server started in interactive mode."
 fi
 
 if [[ $DEBUG == true ]]; then echo "$vnc_cmd"; fi

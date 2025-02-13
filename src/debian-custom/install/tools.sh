@@ -14,7 +14,8 @@ apt-get install -y \
         apt-utils \
         sudo \
         curl \
-        iputils-ping
+        iputils-ping \
+        openssl
 
 apt-get clean -y
 

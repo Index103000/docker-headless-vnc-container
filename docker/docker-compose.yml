@@ -17,19 +17,38 @@ services:
       # ssh
       - "2222:22"
     environment:
+      # root 密码（若不指定，则每次运行时，会自动生成一个随机密码）
+      - ROOT_PASSWORD=8ZbhfgDx7tJsATV7
       # VNC 分辨率
       - VNC_RESOLUTION=1920x1080
-      # VNC 密码
-      - VNC_PW=123456
+      # VNC 密码（若不指定，则每次运行时，会自动生成一个随机密码）
+      - VNC_PW=8ZbhfgDx7tJsATV7
+      # 是否开启 vnc view only 模式
+      - VNC_VIEW_ONLY=false
     user: "0"  # 运行容器时使用 root 用户
 #    volumes:
 #      # 映射 本地项目目录 到 容器项目目录
 #      - ./project:/project
-#    entrypoint: [ "/dockerstartup/vnc_startup_custom.sh" ]
-#    command: [ "--wait", "venv/bin/python3 server_web_unblocker.py" ]
+    entrypoint: [ "/dockerstartup/vnc_startup_custom.sh" ]
+    # 测试用代码
+    command: [ "--wait"]
+    # 命令中，第二个参数用于在 vnc 启动后执行
+#    command: [ "--wait", "/project/cloudflare-bypass-for-scraping/venv/bin/python3 /project/cloudflare-bypass-for-scraping/server_web_unblocker.py" ]
     # 日志配置，限制单个日志文件大小10MB，保留3个历史文件
 #    logging:
 #      driver: "json-file"
 #      options:
 #        max-size: "10m"
 #        max-file: "3"
+#    depends_on:
+#      - authless-proxy
+    # 某些指纹浏览器 需要宿主机权限，否则直接崩溃，慎重开启
+#    privileged: false
+    # 共享内存 对于运行浏览器（尤其是基于 Chromium 的浏览器）至关重要，尤其是当浏览器需要进行多进程管理、缓存大量数据时。
+    # 共享内存不足 会导致浏览器崩溃、页面加载缓慢等问题，因此需要根据容器内运行的应用来适当增加共享内存的大小。
+    # 共享内存在容器启动时就已经分配，容器默认的共享内存是 64MB，必须在启动时就指定共享内存的大小（通过 --shm-size）。
+    # 在宿主机中，执行 docker stats 命令实时查看 docker 容器实时内存占用情况
+    # 在容器中，执行 df -h /dev/shm 可以查看容器中共享内存占用情况
+    # 推荐的大小一般为 1GB 到 2GB，对于大部分浏览器应用，2GB 是一个较为理想的设置。
+    # 每个容器分配 2GB 的共享内存并不意味着它会占用 2GB 的宿主机内存。实际上，容器的共享内存使用量可以根据应用的需求动态变化。如果容器没有使用到配置的共享内存，那么宿主机的内存不会被完全占用。
+    shm_size: '2g'  # 设置共享内存为2GB
