@@ -15,7 +15,8 @@ apt-get install -y \
         sudo \
         curl \
         iputils-ping \
-        openssl
+        openssl \
+        tini
 
 apt-get clean -y
 
