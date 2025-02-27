@@ -11,7 +11,7 @@ services:
 #    restart: unless-stopped
     ports:
       # VNC
-      - "5901:5901"
+      - "5911:5901"
       # noVNC
       - "6901:6901"
       # ssh
